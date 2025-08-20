@@ -236,7 +236,7 @@ def main():
                 <li><strong>Verbe:</strong> {verbo} ({tempo})</li>
                 <li><strong>Structure:</strong> {estrutura}</li>
                 <li><strong>Conjugaison:</strong> {conjugacoes[verbo][tempo][pronome]}</li>
-                {"<li><strong>Complément:</strong> " + complemento + "</li>" if complemento else ""}
+                {"<li><strong>Complément:</strong> {complemento}</li>" if complemento else ""}
             </ul>
         </div>
         """
