@@ -226,7 +226,7 @@ def main():
         """, unsafe_allow_html=True)
         
         # Informações gramaticais
-        complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
+        # complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
         
         grammar_html = f"""
         <div class="grammar-info">
