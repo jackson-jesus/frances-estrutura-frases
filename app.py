@@ -43,6 +43,7 @@ st.markdown("""
         padding: 1rem;
         border-radius: 0.5rem;
         margin: 1rem 0;
+        color: black;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -225,6 +226,8 @@ def main():
         """, unsafe_allow_html=True)
         
         # Informações gramaticais
+        complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
+        
         st.markdown(f"""
         <div class="grammar-info">
             <h4>📚 Informations grammaticales:</h4>
@@ -233,7 +236,7 @@ def main():
                 <li><strong>Verbe:</strong> {verbo} ({tempo})</li>
                 <li><strong>Structure:</strong> {estrutura}</li>
                 <li><strong>Conjugaison:</strong> {conjugacoes[verbo][tempo][pronome]}</li>
-                {f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''}
+                {complement_line}
             </ul>
         </div>
         """, unsafe_allow_html=True)
