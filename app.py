@@ -202,6 +202,7 @@ def main():
             "5️⃣ Complément:",
             [''] + complementos[verbo],
             key="complemento"
+            index=random.randint(0, len(complementos[verbo]) - 1)
         )
         
         # Botão para frase aleatória
@@ -211,6 +212,7 @@ def main():
             st.session_state.random_verbo = random.choice(['être', 'avoir', 'aller', 'faire'])
             st.session_state.random_tempo = random.choice(['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche'])
             st.session_state.random_estrutura = random.choice(['Affirmative', 'Négative', 'Interrogative'])
+            st.session_state.random_complemento = random.choice(complementos[st.session_state.random_verbo])
             st.rerun()
     
     with col2:
@@ -226,7 +228,7 @@ def main():
         """, unsafe_allow_html=True)
         
         # Informações gramaticais
-        # complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
+        complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
         
         grammar_html = f"""
         <div class="grammar-info">
@@ -259,6 +261,7 @@ def main():
                     <li><strong>Verbe:</strong> {st.session_state.get('random_verbo', '')}</li>
                     <li><strong>Temps:</strong> {st.session_state.get('random_tempo', '')}</li>
                     <li><strong>Structure:</strong> {st.session_state.get('random_estrutura', '')}</li>
+                    <li><strong>Complément:</strong> {st.session_state.get('random_complemento', '')}</li>
                 </ul>
             </div>
             """, unsafe_allow_html=True)
@@ -271,7 +274,7 @@ def main():
                     st.session_state.get('random_verbo', 'être'),
                     st.session_state.get('random_tempo', 'présent'),
                     st.session_state.get('random_estrutura', 'Affirmative'),
-                    random_complemento,
+                    st.session_state.get('random_complemento', ''),
                     conjugacoes
                 )
                 st.success(f"**Solution:** {solution}")
