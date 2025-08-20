@@ -19,7 +19,7 @@ Uma aplicação web interativa para aprender e praticar a construção de frases
 
 ## 🚀 Demo Online
 
-[**Acesse a aplicação aqui**](https://your-app-url.streamlit.app) *(Substitua pelo URL do seu deploy)*
+[**Acesse a aplicação aqui**](https://frances-estrutura-frases.streamlit.app)
 
 ## 🛠️ Instalação Local
 
@@ -31,7 +31,7 @@ Uma aplicação web interativa para aprender e praticar a construção de frases
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/french-sentence-builder.git
+git clone https://github.com/seu-usuario/frances-estrutura-frases.git
 cd french-sentence-builder
 ```
 
