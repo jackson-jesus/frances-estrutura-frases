@@ -3,7 +3,7 @@ import random
 
 # Configuração da página
 st.set_page_config(
-    page_title="Constructeur de Phrases Françaises",
+    page_title="Constructeur de phrases françaises",
     page_icon="🇫🇷",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -228,7 +228,7 @@ def main():
         # Informações gramaticais
         complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
         
-        st.markdown(f"""
+        grammar_html = f"""
         <div class="grammar-info">
             <h4>📚 Informations grammaticales:</h4>
             <ul>
@@ -236,10 +236,17 @@ def main():
                 <li><strong>Verbe:</strong> {verbo} ({tempo})</li>
                 <li><strong>Structure:</strong> {estrutura}</li>
                 <li><strong>Conjugaison:</strong> {conjugacoes[verbo][tempo][pronome]}</li>
-                {complement_line}
+        """
+
+        if complemento:
+            grammar_html += f"        <li><strong>Complément:</strong> {complemento}</li>"
+
+        grammar_html += """
             </ul>
         </div>
-        """, unsafe_allow_html=True)
+        """
+
+        st.markdown(grammar_html, unsafe_allow_html=True)
     
     # Seção de desafio aleatório
     if any(key.startswith('random_') for key in st.session_state):
