@@ -19,7 +19,7 @@ Uma aplicação web interativa para aprender e praticar a construção de frases
 
 ## 🚀 Demo Online
 
-[**Acesse a aplicação aqui**](https://frances-estrutura-frases.streamlit.app)
+[**Acesse a aplicação aqui**](https://frances-frases.streamlit.app)
 
 ## 🛠️ Instalação Local
 
