@@ -48,12 +48,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
 @st.cache_data
 def get_conjugations():
     """Retorna as conjugações dos verbos em cache"""
     return {
         'être': {
-            'présent': {'je': 'suis', 'tu': 'es', 'il': 'est', 'elle': 'est', 'on': 'est', 
+            'présent': {'je': 'suis', 'tu': 'es', 'il': 'est', 'elle': 'est', 'on': 'est',
                        'nous': 'sommes', 'vous': 'êtes', 'ils': 'sont', 'elles': 'sont'},
             'passé composé': {'je': 'ai été', 'tu': 'as été', 'il': 'a été', 'elle': 'a été', 'on': 'a été',
                              'nous': 'avons été', 'vous': 'avez été', 'ils': 'ont été', 'elles': 'ont été'},
@@ -102,26 +103,28 @@ def get_conjugations():
         }
     }
 
+
 @st.cache_data
 def get_complements():
     """Retorna os complementos por verbo em cache"""
     return {
         'être': ['content(e)', 'fatigué(e)', 'en retard', 'à la maison', 'médecin', 'étudiant(e)', 'français(e)', 'intelligent(e)'],
         'avoir': ['faim', 'soif', 'froid', 'chaud', '20 ans', 'une voiture', 'un chien', 'des amis', 'du temps', 'de la chance'],
-        'aller': ['au cinéma', 'à l\'école', 'chez le médecin', 'en France', 'au travail', 'à la plage', 'au supermarché', 'voir des amis'],
+        'aller': ['au cinéma', "à l'école", 'chez le médecin', 'en France', 'au travail', 'à la plage', 'au supermarché', 'voir des amis'],
         'faire': ['du sport', 'les courses', 'la cuisine', 'ses devoirs', 'du vélo', 'une promenade', 'attention', 'du bruit']
     }
+
 
 def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
     """Constrói a frase baseada nos parâmetros selecionados"""
     verbo_conjugado = conjugacoes[verbo][tempo][pronome]
-    
+
     if estrutura == 'Affirmative':
         frase = f"{pronome.capitalize()} {verbo_conjugado}"
         if complemento:
             frase += f" {complemento}"
         frase += "."
-        
+
     elif estrutura == 'Négative':
         if tempo in ['passé composé', 'futur proche']:
             if ' ' in verbo_conjugado:
@@ -131,11 +134,11 @@ def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
                 frase = f"{pronome.capitalize()} ne {verbo_conjugado} pas"
         else:
             frase = f"{pronome.capitalize()} ne {verbo_conjugado} pas"
-        
+
         if complemento:
             frase += f" {complemento}"
         frase += "."
-        
+
     elif estrutura == 'Interrogative':
         if pronome in ['je', 'tu', 'il', 'elle', 'on']:
             frase = f"Est-ce que {pronome} {verbo_conjugado}"
@@ -151,60 +154,61 @@ def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
                     frase = f"{verbo_conjugado.capitalize()}-{pronome}"
             else:
                 frase = f"{verbo_conjugado.capitalize()}-{pronome}"
-            
+
             if complemento:
                 frase += f" {complemento}"
             frase += " ?"
-    
+
     return frase
+
 
 def main():
     # Cabeçalho
     st.markdown('<h1 class="main-header">🇫🇷 Constructeur de phrases françaises</h1>', unsafe_allow_html=True)
     st.markdown("---")
-    
+
     # Obter dados
     conjugacoes = get_conjugations()
     complementos = get_complements()
-    
+
     # Layout em colunas
     col1, col2 = st.columns([1, 1])
-    
+
     with col1:
         st.header("🎯 Sélectionnez vos éléments")
-        
+
         # Seletores
         pronome = st.selectbox(
             "1️⃣ Pronome personnel:",
             ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles'],
             key="pronome"
         )
-        
+
         verbo = st.selectbox(
             "2️⃣ Verbe:",
             ['être', 'avoir', 'aller', 'faire'],
             key="verbo"
         )
-        
+
         tempo = st.selectbox(
             "3️⃣ Temps verbal:",
             ['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche'],
             key="tempo"
         )
-        
+
         estrutura = st.selectbox(
             "4️⃣ Structure de phrase:",
             ['Affirmative', 'Négative', 'Interrogative'],
             key="estrutura"
         )
-        
+
         complemento = st.selectbox(
             "5️⃣ Complément:",
-            [''] + complementos[verbo],
+            complementos[verbo],
             key="complemento",
-            index=random.randint(0, len(complementos[verbo]) - 1)
+            index=0  # já começa com o primeiro valor
         )
-        
+
         # Botão para frase aleatória
         st.markdown("---")
         if st.button("🎲 Phrase aléatoire", type="secondary"):
@@ -214,22 +218,20 @@ def main():
             st.session_state.random_estrutura = random.choice(['Affirmative', 'Négative', 'Interrogative'])
             st.session_state.random_complemento = random.choice(complementos[st.session_state.random_verbo])
             st.rerun()
-    
+
     with col2:
         st.header("📝 Phrase construite")
-        
+
         # Construir e exibir a frase
         frase = build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes)
-        
+
         st.markdown(f"""
         <div class="sentence-box">
             <div class="sentence-text">{frase}</div>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Informações gramaticais
-        complement_line = f'<li><strong>Complément:</strong> {complemento}</li>' if complemento else ''
-        
+
+        # Informações gramaticales
         grammar_html = f"""
         <div class="grammar-info">
             <h4>📚 Informations grammaticales:</h4>
@@ -238,20 +240,20 @@ def main():
                 <li><strong>Verbe:</strong> {verbo} ({tempo})</li>
                 <li><strong>Structure:</strong> {estrutura}</li>
                 <li><strong>Conjugaison:</strong> {conjugacoes[verbo][tempo][pronome]}</li>
-                {"<li><strong>Complément:</strong> {complemento}</li>" if complemento else ""}
+                {f"<li><strong>Complément:</strong> {complemento}</li>" if complemento else ""}
             </ul>
         </div>
         """
 
         st.markdown(grammar_html, unsafe_allow_html=True)
-    
+
     # Seção de desafio aleatório
     if any(key.startswith('random_') for key in st.session_state):
         st.markdown("---")
         st.header("🎯 Défi aléatoire")
-        
+
         col3, col4 = st.columns([1, 1])
-        
+
         with col3:
             st.markdown(f"""
             <div class="random-challenge">
@@ -265,10 +267,9 @@ def main():
                 </ul>
             </div>
             """, unsafe_allow_html=True)
-        
+
         with col4:
             if st.button("🔍 Voir la solution"):
-                random_complemento = random.choice(complementos[st.session_state.get('random_verbo', 'être')])
                 solution = build_sentence(
                     st.session_state.get('random_pronome', 'je'),
                     st.session_state.get('random_verbo', 'être'),
@@ -278,7 +279,7 @@ def main():
                     conjugacoes
                 )
                 st.success(f"**Solution:** {solution}")
-    
+
     # Sidebar com informações adicionais
     with st.sidebar:
         st.header("ℹ️ À propos")
@@ -294,7 +295,7 @@ def main():
         - ✅ Compléments contextuels
         - ✅ Défis aléatoires
         """)
-        
+
         st.markdown("---")
         st.header("🎓 Conseils d'utilisation")
         st.markdown("""
@@ -303,9 +304,10 @@ def main():
         3. **Maîtrisez l'interrogation:** Notez les différentes formes
         4. **Utilisez les défis:** Cliquez sur 'Phrase aléatoire' pour vous entraîner
         """)
-        
+
         st.markdown("---")
         st.info("💡 **Astuce:** Essayez de construire 10 phrases différentes pour bien maîtriser chaque structure !")
+
 
 if __name__ == "__main__":
     main()
