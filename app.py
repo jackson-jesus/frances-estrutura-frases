@@ -160,7 +160,7 @@ def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
 
 def main():
     # Cabeçalho
-    st.markdown('<h1 class="main-header">🇫🇷 Constructeur de Phrases Françaises</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🇫🇷 Constructeur de phrases françaises</h1>', unsafe_allow_html=True)
     st.markdown("---")
     
     # Obter dados
@@ -236,12 +236,7 @@ def main():
                 <li><strong>Verbe:</strong> {verbo} ({tempo})</li>
                 <li><strong>Structure:</strong> {estrutura}</li>
                 <li><strong>Conjugaison:</strong> {conjugacoes[verbo][tempo][pronome]}</li>
-        """
-
-        if complemento:
-            grammar_html += f"        <li><strong>Complément:</strong> {complemento}</li>"
-
-        grammar_html += """
+                {"<li><strong>Complément:</strong> " + complemento + "</li>" if complemento else ""}
             </ul>
         </div>
         """
