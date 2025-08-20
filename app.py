@@ -201,7 +201,7 @@ def main():
         complemento = st.selectbox(
             "5️⃣ Complément:",
             [''] + complementos[verbo],
-            key="complemento"
+            key="complemento",
             index=random.randint(0, len(complementos[verbo]) - 1)
         )
         
