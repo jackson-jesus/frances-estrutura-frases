@@ -36,6 +36,7 @@ st.markdown("""
         padding: 1rem;
         border-radius: 0.5rem;
         margin-top: 1rem;
+        color: black;
     }
     .random-challenge {
         background-color: #fff3cd;
