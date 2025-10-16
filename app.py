@@ -46,9 +46,15 @@ st.markdown("""
         margin: 1rem 0;
         color: black;
     }
+    .translation-box {
+        background-color: #e8f5e8;
+        border-left: 5px solid #2e7d32;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0.5rem;
+    }
 </style>
 """, unsafe_allow_html=True)
-
 
 @st.cache_data
 def get_conjugations():
@@ -101,9 +107,9 @@ def get_conjugations():
                            'nous': 'ferons', 'vous': 'ferez', 'ils': 'feront', 'elles': 'feront'},
             'futur proche': {'je': 'vais faire', 'tu': 'vas faire', 'il': 'va faire', 'elle': 'va faire', 'on': 'va faire',
                            'nous': 'allons faire', 'vous': 'allez faire', 'ils': 'vont faire', 'elles': 'vont faire'}
-        }
+        },
+        # Adicione mais conjugações para os outros verbos aqui
     }
-
 
 @st.cache_data
 def get_complements():
@@ -115,15 +121,135 @@ def get_complements():
         'faire': ['du sport', 'les courses', 'la cuisine', 'ses devoirs', 'du vélo', 'une promenade', 'attention', 'du bruit']
     }
 
+@st.cache_data
+def get_grammar_elements():
+    """Retorna elementos gramaticais adicionais"""
+    return {
+        'articles_definis': ['le', 'la', 'les', "l'"],
+        'articles_indefinis': ['un', 'une', 'des'],
+        'adverbes': ['souvent', 'toujours', 'rarement', 'vite', 'lentement', 'bien', 'mal', 'beaucoup', 'peu', 'trop'],
+        'adjectifs_demonstratifs': ['ce', 'cet', 'cette', 'ces'],
+        'adjectifs_indefinis': ['quelque', 'chaque', 'plusieurs', 'certain(e)s', 'aucun(e)', 'tout(e)'],
+        'pronoms_indefinis': ['quelqu\'un', 'quelque chose', 'personne', 'rien', 'chacun(e)', 'tout le monde'],
+        'pronoms_complements': ['me', 'te', 'le', 'la', 'lui', 'nous', 'vous', 'les', 'leur'],
+        'pronoms_adjectifs': ['mon', 'ton', 'son', 'notre', 'votre', 'leur', 'ma', 'ta', 'sa', 'mes', 'tes', 'ses', 'nos', 'vos', 'leurs'],
+        'pronoms_demonstratifs': ['celui', 'celle', 'ceux', 'celles'],
+        'pronoms_possessifs': ['le mien', 'la mienne', 'les miens', 'les miennes', 'le tien', 'la tienne', 'les tiens', 'les tiennes'],
+        'pronoms_relatifs': ['qui', 'que', 'dont', 'où', 'lequel', 'laquelle', 'lesquels', 'lesquelles'],
+        'partitifs': ['du', 'de la', "de l'", 'des'],
+        'pronoms_en_y': ['en', 'y']
+    }
 
-def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
+@st.cache_data
+def get_verb_list():
+    """Retorna a lista completa de verbos"""
+    return [
+        'Être', 'Avoir', 'Faire', 'Dire', 'Pouvoir', 'Aller', 'Voir', 'Savoir', 'Falloir', 'Vouloir', 
+        'Venir', 'Devoir', 'Prendre', 'Trouver', 'Donner', 'Parler', 'Mettre', 'Penser', 'Passer', 
+        'Comprendre', 'Rester', 'Vivre', 'Revenir', 'Sortir', 'Arriver', 'Connaître', 'Devenir', 
+        'Sentir', 'Partir', 'Laisser', 'Demander', 'Répondre', 'Entendre', 'Regarder', 'Aimer', 
+        'Jouer', 'Reconnaître', 'Choisir', 'Toucher', 'Retrouver', 'Appeler', 'Permettre', 'Continuer', 
+        'Apprendre', 'Compter', 'Écouter', 'Attendre', 'Réussir', 'Créer', 'Montrer', 'Ouvrir', 
+        'Lire', 'Écrire', 'Courir', 'Expliquer', 'Conduire', 'Manger', 'Boire', 'Changer', 
+        'Travailler', 'Essayer', 'Appartenir', 'Utiliser', 'Atteindre', 'Finir', 'Décider', 
+        'Construire', 'Offrir', 'Exister', 'Accepter', 'Agir', 'Poser', 'Supposer', 'Obtenir', 
+        'Perdre', 'Douter', 'Former', 'Détruire', 'Rappeler', 'Sourire', 'Installer', 'Exprimer', 
+        'Développer', 'Éviter', 'Améliorer', 'Convaincre', 'Prétendre', 'Apporter', 'Investir', 
+        'Apprécier', 'Réfléchir', 'Désirer'
+    ]
+
+@st.cache_data
+def get_translations():
+    """Retorna traduções para português"""
+    return {
+        'être': 'ser/estar',
+        'avoir': 'ter',
+        'faire': 'fazer',
+        'aller': 'ir',
+        'content(e)': 'contente',
+        'fatigué(e)': 'cansado(a)',
+        'en retard': 'atrasado(a)',
+        'à la maison': 'em casa',
+        'médecin': 'médico(a)',
+        'étudiant(e)': 'estudante',
+        'français(e)': 'francês(a)',
+        'intelligent(e)': 'inteligente',
+        'faim': 'fome',
+        'soif': 'sede',
+        'froid': 'frio',
+        'chaud': 'calor',
+        '20 ans': '20 anos',
+        'une voiture': 'um carro',
+        'un chien': 'um cachorro',
+        'des amis': 'amigos',
+        'du temps': 'tempo',
+        'de la chance': 'sorte',
+        'au cinéma': 'ao cinema',
+        "à l'école": 'à escola',
+        'chez le médecin': 'no médico',
+        'en France': 'na França',
+        'au travail': 'no trabalho',
+        'à la plage': 'na praia',
+        'au supermarché': 'no supermercado',
+        'voir des amis': 'ver amigos',
+        'du sport': 'esporte',
+        'les courses': 'compras',
+        'la cuisine': 'a cozinha/cozinhar',
+        'ses devoirs': 'seus deveres',
+        'du vélo': 'andar de bicicleta',
+        'une promenade': 'um passeio',
+        'attention': 'atenção',
+        'du bruit': 'barulho'
+    }
+
+def get_random_values(conjugacoes, complementos):
+    """Retorna valores aleatórios para inicializar os campos"""
+    pronomes = ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles']
+    verbos = list(conjugacoes.keys())
+    tempos = ['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche']
+    estruturas = ['Affirmative', 'Négative', 'Interrogative']
+    
+    pronome = random.choice(pronomes)
+    verbo = random.choice(verbos)
+    tempo = random.choice(tempos)
+    estrutura = random.choice(estruturas)
+    complemento = random.choice(complementos[verbo])
+    
+    return pronome, verbo, tempo, estrutura, complemento
+
+def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes, grammar_elements):
     """Constrói a frase baseada nos parâmetros selecionados"""
     verbo_conjugado = conjugacoes[verbo][tempo][pronome]
+    
+    # Adiciona elementos gramaticais aleatórios
+    artigo = random.choice(grammar_elements['articles_definis'] + grammar_elements['articles_indefinis'])
+    adjetivo_demonstrativo = random.choice(grammar_elements['adjectifs_demonstratifs'])
+    adjetivo_indefinido = random.choice(grammar_elements['adjectifs_indefinis'])
+    pronome_complemento = random.choice(grammar_elements['pronoms_complements'])
+    pronome_en_y = random.choice(grammar_elements['pronoms_en_y'])
+    adverbe = random.choice(grammar_elements['adverbes'])
 
     if estrutura == 'Affirmative':
         frase = f"{pronome.capitalize()} {verbo_conjugado}"
+        
+        # Adiciona elementos gramaticais com certa probabilidade
+        if random.random() < 0.3:
+            frase += f" {adverbe}"
+        
         if complemento:
-            frase += f" {complemento}"
+            # Adiciona artigo/pronome antes do complemento com certa probabilidade
+            if random.random() < 0.4:
+                if random.random() < 0.5:
+                    frase += f" {artigo} {complemento}"
+                else:
+                    frase += f" {adjetivo_demonstrativo} {complemento}"
+            else:
+                frase += f" {complemento}"
+        
+        # Adiciona pronome complemento com certa probabilidade
+        if random.random() < 0.2:
+            frase = f"{pronome.capitalize()} {pronome_complemento} {verbo_conjugado}" + frase.split(verbo_conjugado)[1]
+        
         frase += "."
 
     elif estrutura == 'Négative':
@@ -136,15 +262,39 @@ def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
         else:
             frase = f"{pronome.capitalize()} ne {verbo_conjugado} pas"
 
+        # Adiciona adverbe com certa probabilidade
+        if random.random() < 0.3:
+            frase = frase.replace(' pas', f' {adverbe} pas')
+
         if complemento:
-            frase += f" {complemento}"
+            # Adiciona artigo/pronome antes do complemento com certa probabilidade
+            if random.random() < 0.4:
+                if random.random() < 0.5:
+                    frase += f" {artigo} {complemento}"
+                else:
+                    frase += f" {adjetivo_demonstrativo} {complemento}"
+            else:
+                frase += f" {complemento}"
+        
         frase += "."
 
     elif estrutura == 'Interrogative':
         if pronome in ['je', 'tu', 'il', 'elle', 'on']:
             frase = f"Est-ce que {pronome} {verbo_conjugado}"
+            
+            # Adiciona adverbe com certa probabilidade
+            if random.random() < 0.3:
+                frase += f" {adverbe}"
+                
             if complemento:
-                frase += f" {complemento}"
+                # Adiciona artigo/pronome antes do complemento com certa probabilidade
+                if random.random() < 0.4:
+                    if random.random() < 0.5:
+                        frase += f" {artigo} {complemento}"
+                    else:
+                        frase += f" {adjetivo_demonstrativo} {complemento}"
+                else:
+                    frase += f" {complemento}"
             frase += " ?"
         else:
             if tempo in ['passé composé', 'futur proche']:
@@ -156,12 +306,89 @@ def build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes):
             else:
                 frase = f"{verbo_conjugado.capitalize()}-{pronome}"
 
+            # Adiciona adverbe com certa probabilidade
+            if random.random() < 0.3:
+                frase += f" {adverbe}"
+                
             if complemento:
-                frase += f" {complemento}"
+                # Adiciona artigo/pronome antes do complemento com certa probabilidade
+                if random.random() < 0.4:
+                    if random.random() < 0.5:
+                        frase += f" {artigo} {complemento}"
+                    else:
+                        frase += f" {adjetivo_demonstrativo} {complemento}"
+                else:
+                    frase += f" {complemento}"
             frase += " ?"
 
     return frase
 
+def get_translation(frase, traducoes):
+    """Traduz a frase para português (versão simplificada)"""
+    # Esta é uma tradução básica, em uma aplicação real você usaria uma API de tradução
+    traducoes_frases = {
+        "Je suis": "Eu sou",
+        "Tu es": "Tu és",
+        "Il est": "Ele é",
+        "Elle est": "Ela é",
+        "Nous sommes": "Nós somos",
+        "Vous êtes": "Vocês são",
+        "Ils sont": "Eles são",
+        "Elles sont": "Elas são",
+        "J'ai": "Eu tenho",
+        "Tu as": "Tu tens",
+        "Il a": "Ele tem",
+        "Elle a": "Ela tem",
+        "Nous avons": "Nós temos",
+        "Vous avez": "Vocês têm",
+        "Ils ont": "Eles têm",
+        "Elles ont": "Elas têm",
+        "Je vais": "Eu vou",
+        "Tu vas": "Tu vais",
+        "Il va": "Ele vai",
+        "Elle va": "Ela vai",
+        "Nous allons": "Nós vamos",
+        "Vous allez": "Vocês vão",
+        "Ils vont": "Eles vão",
+        "Elles vont": "Elas vão",
+        "Je fais": "Eu faço",
+        "Tu fais": "Tu fazes",
+        "Il fait": "Ele faz",
+        "Elle fait": "Ela faz",
+        "Nous faisons": "Nós fazemos",
+        "Vous faites": "Vocês fazem",
+        "Ils font": "Eles fazem",
+        "Elles font": "Elas fazem"
+    }
+    
+    # Procura por padrões conhecidos na frase
+    for padrao_fr, padrao_pt in traducoes_frases.items():
+        if padrao_fr in frase:
+            traducao = frase.replace(padrao_fr, padrao_pt)
+            # Substitui palavras individuais
+            for palavra_fr, palavra_pt in traducoes.items():
+                traducao = traducao.replace(palavra_fr, palavra_pt)
+            return traducao
+    
+    # Se não encontrar padrão, faz substituição básica
+    traducao = frase
+    for palavra_fr, palavra_pt in traducoes.items():
+        traducao = traducao.replace(palavra_fr, palavra_pt)
+    
+    return traducao
+
+def get_example_sentence(verbo, conjugacoes, complementos, grammar_elements):
+    """Gera uma frase de exemplo com o verbo selecionado"""
+    pronomes = ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles']
+    tempos = ['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche']
+    estruturas = ['Affirmative', 'Négative', 'Interrogative']
+    
+    pronome = random.choice(pronomes)
+    tempo = random.choice(tempos)
+    estrutura = random.choice(estruturas)
+    complemento = random.choice(complementos.get(verbo, ['']))
+    
+    return build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes, grammar_elements)
 
 def main():
     # Cabeçalho
@@ -171,6 +398,19 @@ def main():
     # Obter dados
     conjugacoes = get_conjugations()
     complementos = get_complements()
+    grammar_elements = get_grammar_elements()
+    verbos_lista = get_verb_list()
+    traducoes = get_translations()
+
+    # Inicializar valores aleatórios se não existirem na sessão
+    if 'initialized' not in st.session_state:
+        pronome, verbo, tempo, estrutura, complemento = get_random_values(conjugacoes, complementos)
+        st.session_state.pronome = pronome
+        st.session_state.verbo = verbo
+        st.session_state.tempo = tempo
+        st.session_state.estrutura = estrutura
+        st.session_state.complemento = complemento
+        st.session_state.initialized = True
 
     # Layout em colunas
     col1, col2 = st.columns([1, 1])
@@ -178,59 +418,81 @@ def main():
     with col1:
         st.header("🎯 Sélectionnez vos éléments")
 
-        # Seletores
+        # Seletores com valores iniciais aleatórios
         pronome = st.selectbox(
             "1️⃣ Pronome personnel:",
             ['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles'],
-            key="pronome"
+            key="pronome",
+            index=['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles'].index(st.session_state.pronome)
         )
 
         verbo = st.selectbox(
             "2️⃣ Verbe:",
-            ['être', 'avoir', 'aller', 'faire'],
-            key="verbo"
+            list(conjugacoes.keys()),
+            key="verbo",
+            index=list(conjugacoes.keys()).index(st.session_state.verbo)
         )
 
         tempo = st.selectbox(
             "3️⃣ Temps verbal:",
             ['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche'],
-            key="tempo"
+            key="tempo",
+            index=['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche'].index(st.session_state.tempo)
         )
 
         estrutura = st.selectbox(
             "4️⃣ Structure de phrase:",
             ['Affirmative', 'Négative', 'Interrogative'],
-            key="estrutura"
+            key="estrutura",
+            index=['Affirmative', 'Négative', 'Interrogative'].index(st.session_state.estrutura)
         )
 
         complemento = st.selectbox(
             "5️⃣ Complément:",
             complementos[verbo],
             key="complemento",
-            index=0  # já começa com o primeiro valor
+            index=complementos[verbo].index(st.session_state.complemento)
         )
 
         # Botão para frase aleatória
         st.markdown("---")
-        if st.button("🎲 Phrase aléatoire", type="secondary"):
-            st.session_state.random_pronome = random.choice(['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles'])
-            st.session_state.random_verbo = random.choice(['être', 'avoir', 'aller', 'faire'])
-            st.session_state.random_tempo = random.choice(['présent', 'passé composé', 'imparfait', 'futur simple', 'futur proche'])
-            st.session_state.random_estrutura = random.choice(['Affirmative', 'Négative', 'Interrogative'])
-            st.session_state.random_complemento = random.choice(complementos[st.session_state.random_verbo])
-            st.rerun()
+        col_btn1, col_btn2 = st.columns(2)
+        
+        with col_btn1:
+            if st.button("🎲 Phrase aléatoire", type="secondary", use_container_width=True):
+                pronome, verbo, tempo, estrutura, complemento = get_random_values(conjugacoes, complementos)
+                st.session_state.pronome = pronome
+                st.session_state.verbo = verbo
+                st.session_state.tempo = tempo
+                st.session_state.estrutura = estrutura
+                st.session_state.complemento = complemento
+                st.rerun()
+        
+        with col_btn2:
+            if st.button("📚 Exemple avec ce verbe", type="secondary", use_container_width=True):
+                st.session_state.exemple_verbe = get_example_sentence(verbo, conjugacoes, complementos, grammar_elements)
+                st.session_state.montrer_exemple = True
 
     with col2:
         st.header("📝 Phrase construite")
 
         # Construir e exibir a frase
-        frase = build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes)
+        frase = build_sentence(pronome, verbo, tempo, estrutura, complemento, conjugacoes, grammar_elements)
 
         st.markdown(f"""
         <div class="sentence-box">
             <div class="sentence-text">{frase}</div>
         </div>
         """, unsafe_allow_html=True)
+
+        # Botão para mostrar tradução
+        if st.button("🇧🇷 Voir la traduction en portugais"):
+            traducao = get_translation(frase, traducoes)
+            st.markdown(f"""
+            <div class="translation-box">
+                <div class="sentence-text">{traducao}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
         # Informações gramaticales
         grammar_html = f"""
@@ -247,6 +509,26 @@ def main():
         """
 
         st.markdown(grammar_html, unsafe_allow_html=True)
+
+    # Exemplo com o verbo selecionado
+    if st.session_state.get('montrer_exemple', False):
+        st.markdown("---")
+        st.header("💡 Exemple avec ce verbe")
+        
+        col_ex1, col_ex2 = st.columns([1, 1])
+        
+        with col_ex1:
+            st.markdown(f"""
+            <div class="random-challenge">
+                <h4>📚 Phrase d'exemple avec <strong>{verbo}</strong>:</h4>
+                <div class="sentence-text">{st.session_state.exemple_verbe}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_ex2:
+            if st.button("🔄 Nouvel exemple", type="secondary"):
+                st.session_state.exemple_verbe = get_example_sentence(verbo, conjugacoes, complementos, grammar_elements)
+                st.rerun()
 
     # Seção de desafio aleatório
     if any(key.startswith('random_') for key in st.session_state):
@@ -277,7 +559,8 @@ def main():
                     st.session_state.get('random_tempo', 'présent'),
                     st.session_state.get('random_estrutura', 'Affirmative'),
                     st.session_state.get('random_complemento', ''),
-                    conjugacoes
+                    conjugacoes,
+                    grammar_elements
                 )
                 st.success(f"**Solution:** {solution}")
 
@@ -295,6 +578,9 @@ def main():
         - ✅ Conjugaisons automatiques
         - ✅ Compléments contextuels
         - ✅ Défis aléatoires
+        - ✅ Traductions en portugais
+        - ✅ Exemples avec chaque verbe
+        - ✅ Éléments grammaticaux variés
         """)
 
         st.markdown("---")
@@ -304,6 +590,7 @@ def main():
         2. **Pratiquez la négation:** Observez la position de 'ne...pas'
         3. **Maîtrisez l'interrogation:** Notez les différentes formes
         4. **Utilisez les défis:** Cliquez sur 'Phrase aléatoire' pour vous entraîner
+        5. **Consultez les traductions:** Comprenez le sens en portugais
         """)
 
         st.markdown("---")
